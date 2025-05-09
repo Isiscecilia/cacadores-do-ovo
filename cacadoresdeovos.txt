@@ -1,0 +1,111 @@
+import os
+import zipfile
+
+# Estrutura básica do projeto React com o arquivo gerado
+project_structure = {
+    "cacadores-do-ovo/src/App.js": """\
+import React from "react";
+import { Button } from "@/components/ui/button";
+
+export default function Home() {
+  return (
+    <main className="min-h-screen bg-gradient-to-b from-gray-900 to-black text-white font-sans">
+      <section className="text-center py-16 px-4">
+        <h1 className="text-5xl font-bold mb-4">Caçadores do Ovo</h1>
+        <p className="text-xl max-w-2xl mx-auto">
+          Em um universo digital chamado <strong>ARKHEON</strong>, três chaves lendárias estão escondidas.
+          Encontre-as e desbloqueie o segredo do <span className="text-yellow-400 font-semibold">Ovo Dourado</span>.
+        </p>
+        <Button className="mt-6 text-lg px-6 py-3 rounded-2xl bg-yellow-500 hover:bg-yellow-400 transition">
+          Jogar Agora
+        </Button>
+      </section>
+
+      <section className="grid md:grid-cols-3 gap-8 p-8 max-w-6xl mx-auto">
+        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-orange-400">Mundo da Nostalgia</h2>
+          <p className="mt-2">Reviva os anos 80 e 90 em uma cidade dominada por fliperamas, fitas VHS e enigmas clássicos.</p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-blue-400">Mundo Sci-Fi</h2>
+          <p className="mt-2">Explore estações espaciais corrompidas e resolva códigos binários em ambientes futuristas.</p>
+        </div>
+        <div className="bg-gray-800 p-6 rounded-2xl shadow-lg">
+          <h2 className="text-2xl font-bold text-green-400">Mundo Épico</h2>
+          <p className="mt-2">Viaje por florestas encantadas e castelos flutuantes em busca da chave da Força.</p>
+        </div>
+      </section>
+
+      <footer className="text-center text-sm py-6 opacity-60">
+        © 2025 Caçadores do Ovo. Todos os direitos reservados.
+      </footer>
+    </main>
+  );
+}
+""",
+    "cacadores-do-ovo/package.json": """\
+{
+  "name": "cacadores-do-ovo",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "5.0.1"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build"
+  }
+}
+""",
+    "cacadores-do-ovo/public/index.html": """\
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Caçadores do Ovo</title>
+  </head>
+  <body>
+    <noscript>Você precisa habilitar o JavaScript para rodar este app.</noscript>
+    <div id="root"></div>
+  </body>
+</html>
+""",
+    "cacadores-do-ovo/src/index.js": """\
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import Home from './App';
+
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    <Home />
+  </React.StrictMode>
+);
+"""
+}
+
+# Criação dos arquivos
+base_path = "/mnt/data/cacadores-do-ovo"
+os.makedirs(base_path, exist_ok=True)
+
+for file_path, content in project_structure.items():
+    full_path = os.path.join("/mnt/data", file_path)
+    os.makedirs(os.path.dirname(full_path), exist_ok=True)
+    with open(full_path, "w", encoding="utf-8") as f:
+        f.write(content)
+
+# Criar um ZIP com o projeto
+zip_path = "/mnt/data/cacadores-do-ovo.zip"
+with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zipf:
+    for foldername, subfolders, filenames in os.walk(base_path):
+        for filename in filenames:
+            filepath = os.path.join(foldername, filename)
+            arcname = os.path.relpath(filepath, "/mnt/data")
+            zipf.write(filepath, arcname)
+
+zip_path  # Caminho para download
